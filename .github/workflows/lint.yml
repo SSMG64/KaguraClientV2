@@ -1,0 +1,28 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-hygiene:
+    name: Source hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Check whitespace errors
+        run: git diff --check
+      - name: Detect merge-conflict markers
+        shell: bash
+        run: |
+          if grep -RInE '^(<<<<<<< |=======|>>>>>>> )' \
+            --include='*.c' --include='*.cc' --include='*.cpp' \
+            --include='*.h' --include='*.hpp' --include='*.inl' src; then
+            echo "Merge-conflict markers found."
+            exit 1
+          fi

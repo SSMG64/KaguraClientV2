@@ -1,21 +1,19 @@
 # Kagura Client V2
 
-Kagura Client V2 is a PlayStation 3 (PS3) SPRX project written in C++ and organized as a Visual Studio solution. The codebase includes a menu layer, PS3-specific system and memory helpers, and Minecraft-related game code. It is built around the SNC PS3 compiler toolset rather than a standard desktop C++ compiler.
-
-Repository: https://github.com/SSMG64/KaguraClientV2
+Kagura Client V2 is a Minecraft PlayStation 3 (PS3) SPRX mod menu project written in C++ and organized as a Visual Studio solution. The codebase includes a menu layer, PS3-specific system and memory helpers, and Minecraft-related game code. It is built around the SNC PS3 compiler toolset rather than a standard desktop C++ compiler.
 
 > **Build note:** this repository requires a compatible, properly licensed PS3 SDK and SNC toolchain. These proprietary components are not included in the source tree. The project has not been verified as buildable on a clean machine without those dependencies.
 
 ## Contents
 
-- `KaguraClientSPRXV2.sln` — Visual Studio solution.
-- `src/Minecraft.vcxproj` — project configuration. Although the project file is named `Minecraft.vcxproj`, the solution contains the `Minecraft` project and produces a PS3 dynamic library / SPRX-style target.
-- `src/Menu/` — menu entry point and menu / HUD interfaces.
-- `src/Games/` — game-specific functions, options, hooks, button definitions, and PS3 helpers.
-- `src/Minecraft/` — Minecraft-related classes, including client, game, GUI, entity, item, level, network, rendering, and world code.
-- `src/Util/` — filesystem, system-call, timing, export, and shared utility code.
-- `BUILDING.md` — detailed platform and toolchain build notes.
-- `.github/workflows/` — source linting and CodeQL workflows. There is intentionally no automated build workflow because a standard GitHub-hosted runner does not have the proprietary SNC PS3 toolchain.
+- `KaguraClientSPRXV2.sln`: Visual Studio solution.
+- `src/Minecraft.vcxproj`: project configuration. Although the project file is named `Minecraft.vcxproj`, the solution contains the `Minecraft` project and produces a PS3 dynamic library / SPRX-style target.
+- `src/Menu/`: menu entry point and menu / HUD interfaces.
+- `src/Games/`: game-specific functions, options, hooks, button definitions, and PS3 helpers.
+- `src/Minecraft/`: Minecraft-related classes, including client, game, GUI, entity, item, level, network, rendering, and world code.
+- `src/Util/`: filesystem, system-call, timing, export, and shared utility code.
+- `BUILDING.md`: detailed platform and toolchain build notes.
+- `.github/workflows/`: source linting and CodeQL workflows. There is intentionally no automated build workflow because a standard GitHub-hosted runner does not have the proprietary SNC PS3 toolchain.
 
 ## Requirements
 
@@ -77,7 +75,3 @@ This code contains PS3-specific memory and system-call functionality. Incorrect 
 5. Submit a pull request describing the change, the environment used to test it, and any limitations that remain.
 
 Do not commit proprietary SDK files, licensed toolchain binaries, credentials, console-specific secrets, generated build output, or IDE caches.
-
-## License
-
-No license is asserted by this README. Check the repository's license file or ask the project maintainer for the applicable terms before redistributing or reusing the code.

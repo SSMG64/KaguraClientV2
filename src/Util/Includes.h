@@ -1,6 +1,7 @@
 #pragma once
 
 // Standard headers first, before Exports.hpp redefines malloc and printf.
+#ifdef KAGURA_PS3DK
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -11,6 +12,7 @@
 #include <memory>
 #include <functional>
 #include <new>
+#endif
 
 //INCLUDES PS3
 #include <cellstatus.h>
@@ -27,6 +29,21 @@
 #include <cell/cell_fs.h>
 #include <cell/fs/cell_fs_file_api.h>
 
+#ifndef KAGURA_PS3DK
+#pragma comment(lib, "libhttp_stub.a")
+#pragma comment(lib, "libhttp_util_stub.a")
+#pragma comment(lib, "libnet_stub.a")
+#pragma comment(lib, "netctl_stub")
+#pragma comment(lib, "libsysutil_stub.a")
+#pragma comment(lib, "libc.a")
+#pragma comment(lib, "libstdc++.a")
+#pragma comment(lib, "libstdc++_stub.a")
+#pragma comment(lib, "libsn.a")
+#pragma comment(lib, "libm.a")
+#pragma comment(lib, "libio_stub.a")
+#pragma comment(lib, "liblv2_stub.a")
+#pragma comment(lib, "libfs_stub.a")
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,9 +91,15 @@
 #include <locale.h>
 #include <cell/error.h>
 #include <sys/paths.h>
+#ifndef KAGURA_PS3DK
+#include <net/if_dl.h>
+#endif
 #include <cell/fs/cell_fs_errno.h>
 #include <cell/fs/cell_fs_file_api.h>
 #include <sys/fs.h>
+#ifndef KAGURA_PS3DK
+#include <sys/ss_get_open_psid.h>
+#endif
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -85,6 +108,9 @@
 #include <netex/errno.h>
 
 #include <netex/libnetctl.h>
+#ifndef KAGURA_PS3DK
+#pragma comment(lib, "net_stub")
+#endif
 
 //INCLUDES MINECRAFT
 #include "Minecraft/gamemode/GameMode.h"
@@ -106,6 +132,10 @@ Minecraft* g_Minecraft;
 MultiPlayerGameMode* g_Gamemode;
 GuiComponent* g_GuiComponent;
 Level* g_Level2;
+
+#ifdef KAGURA_PS3DK
+#define sleep kagura_sleep
+#endif
 
 //INCLUDES SOURCE
 #include "Games/Buttons.h"

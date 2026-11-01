@@ -31,17 +31,26 @@ void LoopOptions()
 
 #pragma region "ASM"
 
+// The hook copies 8 words over each stub, so a stub must be at least that long.
+#ifdef KAGURA_PS3DK
+#define STUB_NOPS() __asm__ __volatile__(".rept 8\n\tnop\n\t.endr")
+#define STUB_RETURN() return 0
+#else
+#define STUB_NOPS() __nop(); __nop(); __nop(); __nop(); __nop()
+#define STUB_RETURN()
+#endif
+
 void gameRender_Stub(uint32_t r3, uint32_t r4)
 {
-	__nop(); __nop(); __nop(); __nop(); __nop();
+	STUB_NOPS();
 }
 
 void RenderScreen_Stub(uint32_t r3, uint32_t r4) {
-	__nop(); __nop(); __nop(); __nop(); __nop();
+	STUB_NOPS();
 }
 
 void Gui_render_Stub(GuiComponent* gui, double unk) {
-	__nop(); __nop(); __nop(); __nop(); __nop();
+	STUB_NOPS();
 }
 
 void RenderScreen_Hook(uint32_t r3, uint32_t r4) {
@@ -54,7 +63,8 @@ void RenderScreen_Hook(uint32_t r3, uint32_t r4) {
 
 int asm_SetPresenceDetails_Hook(SceNpBasicPresenceDetails2* pres, uint32_t options)
 {
-	__nop(); __nop(); __nop(); __nop(); __nop();
+	STUB_NOPS();
+	STUB_RETURN();
 }
 int sceNpBasicSetPresenceDetails_Hook(SceNpBasicPresenceDetails2* pres, uint32_t options)
 {
@@ -65,24 +75,26 @@ int sceNpBasicSetPresenceDetails_Hook(SceNpBasicPresenceDetails2* pres, uint32_t
 
 int asm_destroyBlockHook(MultiPlayerGameMode* gamemode, BlockPos* blockPos) // ou (...) si tu veux opti apres  sa depend des fois sa marche des fois non!
 {
-	__nop(); __nop(); __nop(); __nop(); __nop();
+	STUB_NOPS();
 	//__asm("li %r3, 0x332;");
+	STUB_RETURN();
 }
 
 void asm_LivingEntity_HurtHook(Entity* entity, EntityDamageSource* entityDamageSource, float damage)
 {
-	__nop(); __nop(); __nop(); __nop(); __nop();
+	STUB_NOPS();
 	//__asm("li %r3, 0x332;");
 }
 
 void asm_Player_HurtHook(ServerPlayer* player, DamageSource* damageSource, float damage)
 {
-	__nop(); __nop(); __nop(); __nop(); __nop();
+	STUB_NOPS();
 }
 
 uint32_t asm_LivingEntity_onChangedBlockHook(Entity* entity, BlockPos* pos)
 {
-	__nop(); __nop(); __nop(); __nop(); __nop();
+	STUB_NOPS();
+	STUB_RETURN();
 }
 
 #pragma endregion

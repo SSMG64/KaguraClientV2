@@ -1,10 +1,10 @@
-# Building Kagura Client V2 with Sony SNC (legacy)
+# Building Kagura Client V2 with the official Sony tools (SNC and PS3 SDK)
 
-> This is the old Visual Studio and SNC route. The open-source route is in [BUILDING.md](../BUILDING.md).
+> This is the official route: Visual Studio, the SNC compiler and the Sony PS3 SDK. If you do not have those tools, the open-source PS3DK route in [BUILDING-PS3DK.md](BUILDING-PS3DK.md) builds the same source. Both routes are supported. [BUILDING.md](../BUILDING.md) helps you pick.
 
 This guide explains what is required to build Kagura Client V2, how to install and configure the publicly obtainable tools, how to build the supplied Visual Studio solution, and how to diagnose common errors. It is written for people who have not built a PlayStation 3 (PS3) project before.
 
-> **Important limitation:** this repository is not a self-contained C++ project. The solution targets the PS3 platform and explicitly selects the proprietary **SNC** compiler toolset. A standard installation of Visual Studio, GCC, or Clang is not enough. You must already have legitimate access to a compatible PS3 SDK and SNC toolchain. Those proprietary packages are not included here, and this guide does not provide unofficial mirrors or redistributed copies.
+> **Important limitation of this route:** the Visual Studio project is not self-contained. The solution targets the PS3 platform and explicitly selects the proprietary **SNC** compiler toolset. A standard installation of Visual Studio, GCC, or Clang is not enough. You must already have legitimate access to a compatible PS3 SDK and SNC toolchain. Those proprietary packages are not included here, and this guide does not provide unofficial mirrors or redistributed copies.
 
 ## Contents
 
@@ -51,7 +51,7 @@ The important project files are:
 - `KaguraClientSPRXV2.sln`: the Visual Studio solution.
 - `src/Minecraft.vcxproj`: the C++ project and its build settings.
 - `src/`: source code.
-- `BUILDING.md`: this guide.
+- `docs/BUILDING-SNC.md`: this guide.
 
 Run build commands from the directory containing `KaguraClientSPRXV2.sln`, unless a step says otherwise.
 
@@ -270,14 +270,12 @@ A successful build means only that the toolchain completed the requested build s
 
 ## 10. Linux and macOS
 
-There is no configured native Linux or macOS build system in this repository. The checked-in project is a Visual Studio/MSBuild C++ project configured for the Windows SNC PS3 toolset and the PS3 SDK paths described above. A normal Linux GCC/Clang or macOS Xcode/Clang installation cannot build it as configured.
+The Visual Studio solution only builds on Windows with the Sony tools. Linux and macOS users have two options:
 
-Practical options are:
+- Use the open-source PS3DK route, which has its own CMake build and works on Linux, WSL2 and macOS (through Docker). See [BUILDING-PS3DK.md](BUILDING-PS3DK.md).
+- Edit the source on Linux or macOS, then build on a Windows machine with the licensed SDK and SNC integration.
 
-- Edit the source on Linux or macOS, then build on a Windows machine with the required licensed SDK and SNC integration.
-- Use a Windows virtual machine only if the relevant software licences permit it and the SNC integration supports that environment.
-
-There is no supplied CMake or Makefile build. Creating a portable build would be a separate engineering task requiring a compatible PS3 PPU toolchain and deliberate build-system maintenance.
+The CMake build is separate from the Visual Studio solution. The Sony route does not use it, and the Sony source paths are left unchanged by it.
 
 ## 11. Troubleshooting
 

@@ -2,6 +2,9 @@
 #include <cell/cell_fs.h>
 #include <sys/sys_time.h>
 #include <sys/timer.h>
+#ifdef KAGURA_PS3DK
+#include <sys/syscall.h>
+#endif
 
 #define SC_COBRA_SYSCALL8                             8
 #define SYSCALL8_OPCODE_GET_DISC_TYPE                 0x7020

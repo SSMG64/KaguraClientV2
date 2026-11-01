@@ -7,9 +7,15 @@
 #include "../util/Vec2.h"
 #include "../util/Vec3.h"
 #include "../util/Color.h"
+#ifdef KAGURA_PS3DK
+#include "../world/entity/ArmorSlot.h"
+#include "../world/event/EntityEvent.h"
+#include "../block/material/MaterialType.h"
+#else
 enum ArmorSlot;
 enum EntityEvent;
 enum MaterialType;
+#endif
 enum class DimensionId;
 class Level;
 class BlockSource;

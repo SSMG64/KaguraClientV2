@@ -64,7 +64,7 @@ typedef struct Vector3
 	const float Length(void) const {
 		return (float)sqrtf(x * x + y * y + z * z);
 	}
-	float Vector3::getLength() const {
+	float getLength() const {
 		return sqrtf((x * x) + (y * y) + (z * z));
 	}
 	const Vector3 Normalize(void) const

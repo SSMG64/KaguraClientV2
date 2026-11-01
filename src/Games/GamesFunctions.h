@@ -7,6 +7,13 @@
 
 #define DWORD_ADDRESS(address, address_name)
 
+#ifdef KAGURA_PS3DK
+template <class T> T* AddrOfTemp(T&& v) { return &v; }
+#define TEMP_ADDR(x) ((uint32_t)AddrOfTemp(x))
+#else
+#define TEMP_ADDR(x) ((uint32_t)&x)
+#endif
+
 namespace FUNCTIONS
 {
 	MAKE_FUNCTION(0x00A74CB0, void, PushMatrix, ());
@@ -92,23 +99,23 @@ void mc_printf(const char* format, ...) {
 }
 
 int Font_width_char(char* text) {
-	FUNCTIONS::Font_width(mc->theMinecraft->fontRenderer, (uint32_t)&getString(c2wc(text)));
+	return FUNCTIONS::Font_width(mc->theMinecraft->fontRenderer, TEMP_ADDR(getString(c2wc(text))));
 }
 
 int Font_width(const wchar_t* text) {
-	FUNCTIONS::Font_width(mc->theMinecraft->fontRenderer, (uint32_t)&getString(text));
+	return FUNCTIONS::Font_width(mc->theMinecraft->fontRenderer, TEMP_ADDR(getString(text)));
 }
 
 void DrawText(const wchar_t* text, float x, float y, uint32_t color) {
-	FUNCTIONS::DrawText(mc->theMinecraft->fontRenderer, (uint32_t)&getString(text), x, y, color, 0, 1);
+	FUNCTIONS::DrawText(mc->theMinecraft->fontRenderer, TEMP_ADDR(getString(text)), x, y, color, 0, 1);
 }
 
 void DrawTextC(char* text, float x, float y, uint32_t color) {
-	FUNCTIONS::DrawText(mc->theMinecraft->fontRenderer, (uint32_t)&getString(c2wc(text)), x, y, color, 0, 1);
+	FUNCTIONS::DrawText(mc->theMinecraft->fontRenderer, TEMP_ADDR(getString(c2wc(text))), x, y, color, 0, 1);
 }
 
 void DrawTextWithShadow(const wchar_t* text, uint32_t x, uint32_t y, uint32_t color) {
-	FUNCTIONS::DrawTextWithShadow(g_GuiComponent, mc->theMinecraft->fontRenderer, (uint32_t)&getString(text), x, y, color);
+	FUNCTIONS::DrawTextWithShadow(g_GuiComponent, mc->theMinecraft->fontRenderer, TEMP_ADDR(getString(text)), x, y, color);
 }
 
 void DrawRectangleAlpha(uint32_t x, uint32_t y, uint32_t width, uint32_t height, Color color) {

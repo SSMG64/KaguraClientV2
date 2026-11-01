@@ -1,5 +1,17 @@
 #pragma once
 
+// Standard headers first, before Exports.hpp redefines malloc and printf.
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <memory>
+#include <functional>
+#include <new>
+
 //INCLUDES PS3
 #include <cellstatus.h>
 #include <sys/prx.h>
@@ -15,19 +27,6 @@
 #include <cell/cell_fs.h>
 #include <cell/fs/cell_fs_file_api.h>
 
-#pragma comment(lib, "libhttp_stub.a")
-#pragma comment(lib, "libhttp_util_stub.a")
-#pragma comment(lib, "libnet_stub.a")
-#pragma comment(lib, "netctl_stub")
-#pragma comment(lib, "libsysutil_stub.a")
-#pragma comment(lib, "libc.a")
-#pragma comment(lib, "libstdc++.a")
-#pragma comment(lib, "libstdc++_stub.a")
-#pragma comment(lib, "libsn.a")
-#pragma comment(lib, "libm.a")
-#pragma comment(lib, "libio_stub.a")
-#pragma comment(lib, "liblv2_stub.a")
-#pragma comment(lib, "libfs_stub.a")
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,15 +43,15 @@
 #include <sys/timer.h>
 #include <fastmath.h>
 #include <cell/pad.h>
-#include <sysutil\sysutil_msgdialog.h>
-#include <sys\sys_time.h>
+#include <sysutil/sysutil_msgdialog.h>
+#include <sys/sys_time.h>
 #include <time.h>
 #include <cell/cell_fs.h>
 #include <cell/http.h>
 #include <sysutil/sysutil_oskdialog.h>
-#include <sys\socket.h>
-#include <netinet\in.h>
-#include <arpa\inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <sys/sys_time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -75,11 +74,9 @@
 #include <locale.h>
 #include <cell/error.h>
 #include <sys/paths.h>
-#include <net\if_dl.h>
 #include <cell/fs/cell_fs_errno.h>
 #include <cell/fs/cell_fs_file_api.h>
 #include <sys/fs.h>
-#include <sys/ss_get_open_psid.h>
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -87,8 +84,7 @@
 #include <netex/net.h>
 #include <netex/errno.h>
 
-#include <netex\libnetctl.h>
-#pragma comment(lib, "net_stub")
+#include <netex/libnetctl.h>
 
 //INCLUDES MINECRAFT
 #include "Minecraft/gamemode/GameMode.h"

@@ -1,107 +1,104 @@
 #pragma once
-#include <yvals.h> // for _CSTD
-#include <xstddef> // for _THROW1
-#include <new> // for nothrow_t
+#include <cstddef>
+#include <new>
 #include "Util/Exports.hpp"
 
-void* operator new(std::size_t size) _THROW1(_XSTD bad_alloc) // allocate or throw exception
+void* operator new(std::size_t size)
 {
    return malloc(size);
 }
 
-void* operator new(std::size_t size, const _STD nothrow_t&) _THROW0() // allocate or return null pointer
+void* operator new(std::size_t size, const std::nothrow_t&) noexcept
 {
    return malloc(size);
 }
 
-void* operator new(size_t size, size_t align)
+void* operator new(std::size_t size, std::size_t align)
 {
    return memalign(align, size);
 }
 
-void* operator new(size_t size, size_t align, const _STD nothrow_t&) _THROW0()
+void* operator new(std::size_t size, std::size_t align, const std::nothrow_t&) noexcept
 {
    return memalign(align, size);
 }
 
-void* operator new[](std::size_t size) _THROW1(_XSTD bad_alloc)	// allocate array or throw exception
+void* operator new[](std::size_t size)
 {
    return malloc(size);
 }
 
-void* operator new[](std::size_t size, const _STD nothrow_t&) _THROW0() // allocate array or return null pointer
+void* operator new[](std::size_t size, const std::nothrow_t&) noexcept
 {
    return malloc(size);
 }
 
-void* operator new[](size_t size, size_t align)
+void* operator new[](std::size_t size, std::size_t align)
 {
    return operator new(size, align);
 }
 
-void* operator new[](size_t size, size_t align, const _STD nothrow_t&) _THROW0()
+void* operator new[](std::size_t size, std::size_t align, const std::nothrow_t&) noexcept
 {
    return operator new(size, align);
 }
 
-void operator delete(void* mem) _THROW0()  // delete allocated storage
+void operator delete(void* mem) noexcept
 {
    free(mem);
 }
 
-// The rest of these deletes will be called if the correspond call to
-// new throws an exception.
-void operator delete(void* mem, const _STD nothrow_t&) _THROW0() // delete if nothrow new fails -- REPLACEABLE
+void operator delete(void* mem, const std::nothrow_t&) noexcept
 {
    free(mem);
 }
 
-void operator delete(void* ptr, void* prt2)
+void operator delete(void* ptr, void*)
 {
    return operator delete(ptr);
 }
 
-void operator delete(void* ptr, size_t align)
+void operator delete(void* ptr, std::size_t)
 {
    return operator delete(ptr);
 }
 
-void operator delete(void* ptr, size_t align, const _STD nothrow_t&) _THROW0()
+void operator delete(void* ptr, std::size_t, const std::nothrow_t&) noexcept
 {
    return operator delete(ptr);
 }
 
-void operator delete(void* ptr, size_t align, void* prt2)
+void operator delete(void* ptr, std::size_t, void*)
 {
    return operator delete(ptr);
 }
 
-void operator delete[](void* mem) _THROW0() // delete allocated array
+void operator delete[](void* mem) noexcept
 {
    free(mem);
 }
 
-void operator delete[](void* mem, const _STD nothrow_t&) _THROW0() // delete if nothrow array new fails -- REPLACEABLE
+void operator delete[](void* mem, const std::nothrow_t&) noexcept
 {
    free(mem);
 }
 
-void operator delete[](void* ptr, void* prt2)
+void operator delete[](void* ptr, void* ptr2)
 {
-   return operator delete(ptr, prt2);
+   return operator delete(ptr, ptr2);
 }
 
-void operator delete[](void* ptr, size_t align)
+void operator delete[](void* ptr, std::size_t align)
 {
    return operator delete(ptr, align);
 }
 
-void operator delete[](void* ptr, size_t align, const _STD nothrow_t&) _THROW0()
+void operator delete[](void* ptr, std::size_t align, const std::nothrow_t&) noexcept
 {
    return operator delete(ptr, align);
 }
 
-void operator delete[](void* ptr, size_t align, void* prt2)
+void operator delete[](void* ptr, std::size_t align, void*)
 {
    return operator delete(ptr, align);
 }

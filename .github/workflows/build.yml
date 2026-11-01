@@ -1,0 +1,152 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PS3DK_TAG: v0.19.0
+  TOOLCHAIN_KEY: ps3dk-v0.19.0-ubuntu-24.04-r1
+
+jobs:
+  toolchain:
+    name: Toolchain (PS3DK v0.19.0)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Check out PS3DK
+        uses: actions/checkout@v7
+        with:
+          repository: FirebirdTA01/PS3DK
+          ref: ${{ env.PS3DK_TAG }}
+          path: ps3dk
+
+      - name: Restore toolchain cache
+        id: cache
+        uses: actions/cache@v5
+        with:
+          path: ps3dk/stage/ps3dev
+          key: ${{ env.TOOLCHAIN_KEY }}
+
+      - name: Install host dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+              build-essential gcc-12 g++-12 cmake ninja-build texinfo \
+              bison flex libgmp-dev libmpfr-dev libmpc-dev libisl-dev \
+              zlib1g-dev libreadline-dev libncurses-dev libexpat1-dev \
+              libssl-dev libelf-dev python3 python3-dev git wget patch \
+              autoconf automake libtool zip unzip
+
+      - name: Install Rust
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build toolchain and SDK
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: ps3dk
+        run: |
+          source scripts/env.sh
+          ./scripts/bootstrap.sh
+          ./scripts/build-spu-toolchain.sh
+          ./scripts/build-ppu-toolchain.sh
+          ./scripts/build-psl1ght.sh
+          ./scripts/build-sdk.sh
+          ./scripts/build-cell-stub-archives.sh
+          if [ ! -f "$PS3DK/ppu/lib/lv2-prx-crt.o" ]; then ./scripts/build-runtime-lv2.sh; fi
+
+      - name: Check the PRX runtime is installed
+        working-directory: ps3dk
+        run: |
+          source scripts/env.sh
+          test -x "$PS3DEV/ppu/bin/powerpc64-ps3-elf-g++"
+          test -f "$PS3DK/ppu/lib/lv2-prx.specs"
+          test -f "$PS3DK/ppu/lib/lv2-prx.ld"
+          test -f "$PS3DK/ppu/lib/lv2-prx-crt.o"
+
+  build:
+    name: Plugin (${{ matrix.type }})
+    needs: toolchain
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [Debug, Release]
+    steps:
+      - name: Check out Kagura
+        uses: actions/checkout@v7
+
+      - name: Check out PS3DK
+        uses: actions/checkout@v7
+        with:
+          repository: FirebirdTA01/PS3DK
+          ref: ${{ env.PS3DK_TAG }}
+          path: ps3dk
+
+      - name: Restore toolchain cache
+        uses: actions/cache/restore@v5
+        with:
+          path: ps3dk/stage/ps3dev
+          key: ${{ env.TOOLCHAIN_KEY }}
+          fail-on-cache-miss: true
+
+      - name: Install CMake and Ninja
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake ninja-build
+
+      - name: Toolchain smoke test (PS3DK example SPRX)
+        run: |
+          source ps3dk/scripts/env.sh
+          cmake -S ps3dk/samples/lv2/hello-sprx-export -B smoke -G Ninja \
+              -DCMAKE_TOOLCHAIN_FILE="$GITHUB_WORKSPACE/ps3dk/cmake/ps3-ppu-toolchain.cmake"
+          cmake --build smoke
+
+      - name: Build Kagura Client V2
+        run: |
+          source ps3dk/scripts/env.sh
+          PS3DK_CMAKE_DIR="$GITHUB_WORKSPACE/ps3dk/cmake" ./scripts/build.sh ${{ matrix.type }}
+
+      - name: Upload plugin
+        uses: actions/upload-artifact@v6
+        with:
+          name: KaguraClientV2-${{ matrix.type }}
+          path: build/out/*
+
+  windows:
+    name: Plugin on Windows (experimental)
+    runs-on: windows-latest
+    continue-on-error: true
+    timeout-minutes: 60
+    steps:
+      - name: Check out Kagura
+        uses: actions/checkout@v7
+
+      - name: Download the prebuilt PS3DK for Windows
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download $env:PS3DK_TAG --repo FirebirdTA01/PS3DK --pattern "ps3-sdk-*-windows-x86_64.zip" --dir ps3dk-zip
+          New-Item -ItemType Directory -Force -Path C:\PS3DK | Out-Null
+          tar -xf (Get-ChildItem ps3dk-zip\*.zip | Select-Object -First 1).FullName -C C:\PS3DK
+
+      - name: Build Kagura Client V2
+        shell: cmd
+        run: |
+          set PS3DK=C:\PS3DK
+          call "%PS3DK%\setup.cmd"
+          cmake -S . -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE="%PS3DK%\cmake\ps3-ppu-toolchain.cmake" -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+
+      - name: Upload plugin
+        uses: actions/upload-artifact@v6
+        with:
+          name: KaguraClientV2-Windows
+          path: build/out/*

@@ -10,13 +10,14 @@ ___  ____                            __ _     ___________________   __
 */
 
 #include <Util/Dialog.h>
+#include <sys/moduleexport.h>
 #include "Util/Includes.h"
 
 SYS_MODULE_INFO(Minecraft, 0, 1, 1);
 SYS_MODULE_START(Minecraft_Main);
 SYS_MODULE_STOP(Minecraft_Stop);
 
-extern "C" int Minecraft_Main(void)
+extern "C" int Minecraft_Main(size_t, void*)
 {
 	BetterOptions();
 	Dialog::msgdialog_mode = Dialog::MODE_RUNNING;
@@ -26,7 +27,7 @@ extern "C" int Minecraft_Main(void)
 	InstallHooks();
 	return SYS_PRX_RESIDENT;
 }
-extern "C" int Minecraft_Stop(void)
+extern "C" int Minecraft_Stop(size_t, void*)
 {
 	UninstallHooks();
 	return SYS_PRX_RESIDENT;

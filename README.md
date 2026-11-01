@@ -1,8 +1,8 @@
 # Kagura Client V2
 
-Kagura Client V2 is a Minecraft PlayStation 3 (PS3) SPRX mod menu project written in C++ and organized as a Visual Studio solution. The codebase includes a menu layer, PS3-specific system and memory helpers, and Minecraft-related game code. It is built around the SNC PS3 compiler toolset rather than a standard desktop C++ compiler.
+Kagura Client V2 is a Minecraft PlayStation 3 (PS3) SPRX mod menu project written in C++ and organized as a Visual Studio solution. The codebase includes a menu layer, PS3-specific system and memory helpers, and Minecraft-related game code. It builds with the open-source PS3DK toolchain (GCC) through CMake, and the original Visual Studio and SNC project is kept for anyone with the Sony tools.
 
-> **Build note:** this repository requires a compatible, properly licensed PS3 SDK and SNC toolchain. These proprietary components are not included in the source tree. The project has not been verified as buildable on a clean machine without those dependencies.
+> **Build note:** the PS3DK build is new and its first real test is the GitHub Actions workflow. The legacy SNC build needs a properly licensed PS3 SDK and SNC toolchain, which are not included. See [BUILDING.md](BUILDING.md).
 
 ## Contents
 
@@ -13,7 +13,8 @@ Kagura Client V2 is a Minecraft PlayStation 3 (PS3) SPRX mod menu project writte
 - `src/Minecraft/`: Minecraft-related classes, including client, game, GUI, entity, item, level, network, rendering, and world code.
 - `src/Util/`: filesystem, system-call, timing, export, and shared utility code.
 - `BUILDING.md`: detailed platform and toolchain build notes.
-- `.github/workflows/`: source linting and CodeQL workflows. There is intentionally no automated build workflow because a standard GitHub-hosted runner does not have the proprietary SNC PS3 toolchain.
+- `.github/workflows/`: source linting, CodeQL and the PS3DK build workflow.
+- `CMakeLists.txt`, `scripts/build.sh`, `compat/`: the PS3DK build and the shims for Sony-only headers.
 
 ## Requirements
 
@@ -36,11 +37,11 @@ Open `KaguraClientSPRXV2.sln` in a Visual Studio installation that has the SNC P
 
 Then build the solution using Visual Studio or MSBuild. The project configuration writes output under `bin/<Configuration>-<Platform>/` and intermediate files under `bin-int/<Configuration>-<Platform>/`.
 
-For command-line examples, environment-variable setup, platform limitations, and troubleshooting, read [BUILDING.md](BUILDING.md) before attempting a build. The precise commands can depend on the Visual Studio version, SDK installation, and SNC integration installed on the build machine.
+For command-line examples, environment-variable setup, platform limitations, and troubleshooting, read [BUILDING.md](BUILDING.md) before attempting a build, and [docs/BUILDING-SNC.md](docs/BUILDING-SNC.md) for the legacy route. The precise commands can depend on the Visual Studio version, SDK installation, and SNC integration installed on the build machine.
 
 ## Project and CI status
 
-The repository includes automated checks for source hygiene and CodeQL analysis. These checks do not prove that the project compiles or runs on a PS3. A reliable automated build would require a self-hosted Windows runner with the correct licensed SDK and SNC toolchain already installed and configured. The build workflow has been removed rather than presenting an unconfigured workflow as a working build pipeline.
+The repository includes source hygiene and CodeQL checks, plus a build workflow that compiles the plugin with the PS3DK toolchain. A green build proves it compiles and links, not that it runs on a console. The legacy SNC build cannot run on GitHub-hosted runners.
 
 ## Source layout
 

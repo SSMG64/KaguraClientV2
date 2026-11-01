@@ -46,7 +46,7 @@ jobs:
 
       - name: Install the toolchain and SDK
         if: steps.cache.outputs.cache-hit != 'true'
-        run: ./scripts/setup-ps3dk.sh
+        run: bash scripts/setup-ps3dk.sh
 
       - name: Check the toolchain is complete
         run: |
@@ -89,7 +89,7 @@ jobs:
           cmake --build "$RUNNER_TEMP/smoke"
 
       - name: Build Kagura Client V2
-        run: ./scripts/build.sh ${{ matrix.type }}
+        run: bash scripts/build.sh ${{ matrix.type }}
 
       - name: Check the plugin files exist
         run: |

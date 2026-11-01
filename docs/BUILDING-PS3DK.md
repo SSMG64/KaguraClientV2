@@ -43,16 +43,16 @@ cd "$HOME/KaguraClientV2"
 3. Install the toolchain once. It downloads PS3DK v0.19.0 and its compilers (checked against fixed hashes), then sets up the SDK. This takes about 5 to 10 minutes and about 1.5 GB of disk:
 
 ```bash
-./scripts/setup-ps3dk.sh
+bash scripts/setup-ps3dk.sh
 ```
 
 4. Build the plugin:
 
 ```bash
-./scripts/build.sh Release
+bash scripts/build.sh Release
 ```
 
-Use `Debug` instead of `Release` for a debug build. The script loads the toolchain for you. The next time, only step 4 is needed.
+Use `Debug` instead of `Release` for a debug build. The script loads the toolchain for you. The next time, only step 4 is needed. The scripts are started with `bash` on purpose, so it does not matter if your download or upload dropped their "executable" flag.
 
 ## Windows
 
@@ -111,8 +111,8 @@ apt-get update
 apt-get install -y build-essential cmake ninja-build patch python3 git curl ca-certificates xz-utils libgmp-dev libelf-dev libssl-dev zlib1g-dev
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source "$HOME/.cargo/env"
-./scripts/setup-ps3dk.sh
-./scripts/build.sh Release
+bash scripts/setup-ps3dk.sh
+bash scripts/build.sh Release
 ```
 
 The plugin files appear in `build/out/` inside your Kagura folder on the Mac. On Apple Silicon the container runs under emulation, so expect it to be slower.
@@ -139,7 +139,7 @@ The Sony route sees the original code. The PS3DK route defines `KAGURA_PS3DK` (i
 
 | Message | What to do |
 |---|---|
-| `PS3DK is not loaded` | Run `./scripts/setup-ps3dk.sh` once |
+| `PS3DK is not loaded` | Run `bash scripts/setup-ps3dk.sh` once |
 | `needs Linux x86_64` | Use WSL2 on Windows or Docker on macOS, see above |
 | `missing: ...` from the setup script | Install what it lists, the Ubuntu command is in step 1 |
 | `checksum mismatch` | The download was damaged. Run the script again |

@@ -22,8 +22,8 @@ On Linux or WSL2 (Ubuntu 24.04), after installing the build tools listed in [doc
 ```bash
 git clone https://github.com/SSMG64/KaguraClientV2.git "$HOME/KaguraClientV2"
 cd "$HOME/KaguraClientV2"
-./scripts/setup-ps3dk.sh
-./scripts/build.sh Release
+bash scripts/setup-ps3dk.sh
+bash scripts/build.sh Release
 ```
 
 The plugin files appear in `build/out/`. The `.fake.sprx` file is the one for custom-firmware consoles.

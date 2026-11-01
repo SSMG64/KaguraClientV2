@@ -14,7 +14,7 @@ if [ -z "${PS3DEV:-}" ] && [ -f "$ENV_FILE" ]; then
 fi
 
 if [ -z "${PS3DEV:-}" ]; then
-    echo "PS3DK is not loaded. Run ./scripts/setup-ps3dk.sh once, then try again." >&2
+    echo "PS3DK is not loaded. Run bash scripts/setup-ps3dk.sh once, then try again." >&2
     exit 1
 fi
 

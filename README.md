@@ -29,8 +29,8 @@ This needs Windows, Visual Studio with the SNC PS3 toolset integration, and a le
 This needs no Sony software. On Linux or WSL2 (Ubuntu 24.04):
 
 ```bash
-./scripts/setup-ps3dk.sh
-./scripts/build.sh Release
+bash scripts/setup-ps3dk.sh
+bash scripts/build.sh Release
 ```
 
 The first command installs the toolchain once, the second builds the plugin into `build/out/`. Windows without WSL, macOS and the exact prerequisites are covered in [docs/BUILDING-PS3DK.md](docs/BUILDING-PS3DK.md).
